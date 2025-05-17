@@ -1,54 +1,112 @@
-# React + TypeScript + Vite
+# FakeStore E-commerce Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Una aplicación web moderna de comercio electrónico construida con React y TypeScript que interactúa con la FakeStore API.
 
-Currently, two official plugins are available:
+## 🚀 Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Listado de Productos**: Visualización de productos en una cuadrícula responsive con imágenes, precios y descripciones.
+- **Detalles del Producto**: Página detallada para cada producto con información completa.
+- **Creación de Productos**: Formulario para agregar nuevos productos al catálogo.
+- **Diseño Responsive**: Interfaz adaptativa que funciona en dispositivos móviles y de escritorio.
+- **UI Moderna**: Interfaz de usuario moderna construida con Tailwind CSS.
 
-## Expanding the ESLint configuration
+## 🛠️ Tecnologías Utilizadas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 18+
+- TypeScript
+- React Router v6
+- Tailwind CSS
+- Axios
+- FakeStore API
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 📦 Instalación
+
+1. Clona el repositorio:
+```bash
+git clone [url-del-repositorio]
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+2. Instala las dependencias:
+```bash
+npm install
 ```
+
+3. Inicia el servidor de desarrollo:
+```bash
+npm run dev
+```
+
+## 🎯 Estructura del Proyecto
+
+```
+src/
+├── components/
+│   ├── ProductList.tsx    # Lista de productos
+│   ├── ProductDetail.tsx  # Detalles del producto
+│   └── CreateProduct.tsx  # Formulario de creación
+├── lib/
+│   └── api.ts            # Servicios de API
+├── App.tsx               # Componente principal
+└── main.tsx             # Punto de entrada
+```
+
+## 🌟 Características Principales
+
+### Navegación
+- Barra de navegación responsive con logo y menú
+- Enlaces a la lista de productos y creación de productos
+- Menú hamburguesa para dispositivos móviles
+
+### Lista de Productos
+- Grid responsive de productos
+- Imágenes de productos con fallback
+- Precios y descripciones
+- Estado de carga y manejo de errores
+
+### Detalles del Producto
+- Vista detallada con imagen grande
+- Información completa del producto
+- Sistema de calificación visual
+- Botón de "Añadir al carrito"
+
+### Creación de Productos
+- Formulario completo para nuevos productos
+- Validación de campos
+- Categorías predefinidas
+- Manejo de errores y estados de carga
+
+## 🎨 UI/UX
+
+- Diseño moderno y limpio
+- Animaciones suaves
+- Estados de carga con skeletons
+- Mensajes de error claros
+- Footer con información de copyright y enlaces sociales
+
+## 🔧 Configuración
+
+El proyecto utiliza las siguientes configuraciones principales:
+
+- Tailwind CSS para estilos
+- React Router para navegación
+- Axios para peticiones HTTP
+- TypeScript para type safety
+
+## 📱 Responsive Design
+
+- Diseño adaptable a diferentes tamaños de pantalla
+- Menú hamburguesa para móviles
+- Grid responsive para productos
+- Imágenes optimizadas
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crea tu rama de características (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
