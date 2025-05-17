@@ -5,10 +5,13 @@ import { Link } from "react-router-dom"
 import { api } from "@/lib/api"
 import type { Product } from "@/lib/api"
 
+const ITEMS_PER_PAGE = 8
+
 export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,7 +20,7 @@ export default function ProductList() {
         setProducts(data)
         setLoading(false)
       } catch (err) {
-        setError("Error loading products")
+        setError("Error al cargar los productos")
         setLoading(false)
       }
     }
@@ -25,12 +28,23 @@ export default function ProductList() {
     fetchProducts()
   }, [])
 
+  // Calcular productos para la página actual
+  const indexOfLastProduct = currentPage * ITEMS_PER_PAGE
+  const indexOfFirstProduct = indexOfLastProduct - ITEMS_PER_PAGE
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct)
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE)
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   if (loading) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8">Products</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, index) => (
+        <h1 className="text-3xl font-bold mb-8">Productos</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, index) => (
             <div key={index} className="border rounded-lg p-4">
               <div className="h-48 bg-gray-100 animate-pulse" />
               <div className="h-6 bg-gray-100 animate-pulse mt-4 w-3/4" />
@@ -52,7 +66,7 @@ export default function ProductList() {
           onClick={() => window.location.reload()}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          Try Again
+          Intentar de nuevo
         </button>
       </div>
     )
@@ -61,16 +75,16 @@ export default function ProductList() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Products</h1>
+        <h1 className="text-3xl font-bold">Productos</h1>
         <Link to="/create">
           <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Add New Product
+            Agregar Producto
           </button>
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {currentProducts.map((product) => (
           <div
             key={product.id}
             className="border rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -92,7 +106,7 @@ export default function ProductList() {
                 <p className="font-medium text-lg">${product.price.toFixed(2)}</p>
                 <Link to={`/product/${product.id}`}>
                   <button className="border border-gray-300 px-3 py-1 rounded text-sm hover:bg-gray-50">
-                    View Details
+                    Ver Detalles
                   </button>
                 </Link>
               </div>
@@ -103,13 +117,81 @@ export default function ProductList() {
 
       {products.length === 0 && (
         <div className="text-center py-12">
-          <h2 className="text-xl font-medium mb-2">No products found</h2>
-          <p className="text-gray-500 mb-6">Start by adding your first product</p>
+          <h2 className="text-xl font-medium mb-2">No se encontraron productos</h2>
+          <p className="text-gray-500 mb-6">Comienza agregando tu primer producto</p>
           <Link to="/create">
             <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              Add New Product
+              Agregar Producto
             </button>
           </Link>
+        </div>
+      )}
+
+      {/* Paginación */}
+      {products.length > 0 && (
+        <div className="mt-8 flex justify-center">
+          <nav className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-3 py-1 rounded-md ${
+                currentPage === 1
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+              aria-label="Página anterior"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNumber = index + 1
+              const isCurrentPage = pageNumber === currentPage
+              const isNearCurrentPage = 
+                Math.abs(pageNumber - currentPage) <= 1 || 
+                pageNumber === 1 || 
+                pageNumber === totalPages
+
+              if (!isNearCurrentPage) {
+                if (pageNumber === 2 || pageNumber === totalPages - 1) {
+                  return <span key={pageNumber} className="px-2">...</span>
+                }
+                return null
+              }
+
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`px-4 py-2 rounded-md ${
+                    isCurrentPage
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                  aria-label={`Ir a página ${pageNumber}`}
+                >
+                  {pageNumber}
+                </button>
+              )
+            })}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-3 py-1 rounded-md ${
+                currentPage === totalPages
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+              aria-label="Página siguiente"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </nav>
         </div>
       )}
     </div>
